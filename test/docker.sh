@@ -6,7 +6,7 @@ test_node_versions="0.8.28 0.10.40 0.12.7"
 test_iojs_versions="1.8.4 2.4.0 3.3.0"
 
 __dirname="$(CDPATH= cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-dot_node_gyp=${__dirname}/.node-gyp/
+dot_node_gyp=${__dirname}/.node-ninja/
 
 # borrows from https://github.com/rvagg/dnt/
 
@@ -30,44 +30,44 @@ setup_container() {
   fi
 }
 
-# Run tests inside each of the versioned containers, copy cwd into npm's copy of node-gyp
+# Run tests inside each of the versioned containers, copy cwd into npm's copy of node-ninja
 # so it'll be invoked by npm when a compile is needed
 #  run_tests(version, test-commands)
 run_tests() {
   local version="$1"
   local run_cmd="$2"
 
-  run_cmd="rsync -aAXx --delete --exclude .git --exclude build /node-gyp-src/ /usr/lib/node_modules/npm/node_modules/node-gyp/;
-    /bin/su -s /bin/bash node-gyp -c 'cd && ${run_cmd}'"
+  run_cmd="rsync -aAXx --delete --exclude .git --exclude build /node-ninja-src/ /usr/lib/node_modules/npm/node_modules/node-ninja/;
+    /bin/su -s /bin/bash node-ninja -c 'cd && ${run_cmd}'"
 
   rm -rf $dot_node_gyp
 
   docker run \
     --rm -i \
-    -v ~/.npm/:/node-gyp/.npm/ \
-    -v ${dot_node_gyp}:/node-gyp/.node-gyp/ \
-    -v $(pwd):/node-gyp-src/:ro \
-    node-gyp-test/${version} /bin/bash -c "${run_cmd}"
+    -v ~/.npm/:/node-ninja/.npm/ \
+    -v ${dot_node_gyp}:/node-ninja/.node-ninja/ \
+    -v $(pwd):/node-ninja-src/:ro \
+    node-ninja-test/${version} /bin/bash -c "${run_cmd}"
 }
 
 # A base image with build tools and a user account
-setup_container "node-gyp-test/base" "ubuntu:14.04" "
+setup_container "node-ninja-test/base" "ubuntu:14.04" "
   apt-get update &&
   apt-get install -y build-essential python git rsync curl &&
-  adduser --gecos node-gyp --home /node-gyp/ --disabled-login node-gyp &&
-  echo "node-gyp:node-gyp" | chpasswd
+  adduser --gecos node-ninja --home /node-ninja/ --disabled-login node-ninja &&
+  echo "node-ninja:node-ninja" | chpasswd
 "
 
 # An image on top of the base containing clones of repos we want to use for testing
-setup_container "node-gyp-test/clones" "node-gyp-test/base" "
-  cd /node-gyp/ && git clone https://github.com/justmoon/node-bignum.git &&
-  cd /node-gyp/ && git clone https://github.com/bnoordhuis/node-buffertools.git &&
-  chown -R node-gyp.node-gyp /node-gyp/
+setup_container "node-ninja-test/clones" "node-ninja-test/base" "
+  cd /node-ninja/ && git clone https://github.com/justmoon/node-bignum.git &&
+  cd /node-ninja/ && git clone https://github.com/bnoordhuis/node-buffertools.git &&
+  chown -R node-ninja.node-ninja /node-ninja/
 "
 
 # An image for each of the node versions we want to test with that version installed and the latest npm
 for v in $test_node_versions; do
-  setup_container "node-gyp-test/${v}" "node-gyp-test/clones" "
+  setup_container "node-ninja-test/${v}" "node-ninja-test/clones" "
     curl -sL https://nodejs.org/dist/v${v}/node-v${v}-linux-x64.tar.gz | tar -zxv --strip-components=1 -C /usr/ &&
     npm install npm@latest -g &&
     node -v && npm -v
@@ -76,7 +76,7 @@ done
 
 # An image for each of the io.js versions we want to test with that version installed and the latest npm
 for v in $test_iojs_versions; do
-  setup_container "node-gyp-test/${v}" "node-gyp-test/clones" "
+  setup_container "node-ninja-test/${v}" "node-ninja-test/clones" "
     curl -sL https://iojs.org/dist/v${v}/iojs-v${v}-linux-x64.tar.gz | tar -zxv --strip-components=1 -C /usr/ &&
     npm install npm@latest -g &&
     node -v && npm -v
@@ -84,7 +84,7 @@ for v in $test_iojs_versions; do
 done
 
 # Run the tests for all of the test images we've created,
-# we should see node-gyp doing its download, configure and run thing
+# we should see node-ninja doing its download, configure and run thing
 # _NOTE: bignum doesn't compile on 0.8 currently so it'll fail for that version only_
 for v in $test_node_versions $test_iojs_versions; do
   run_tests $v "
@@ -120,23 +120,23 @@ test_download_node_version "3.3.0" "iojs-3.2.0/include/node" "3.2.0"
 # we can test whether it uses the proxy because after 2 connections the proxy will
 # die and therefore should not be running at the end of the test, `nc` can tell us this
 run_tests "3.3.0" "
-  (node /node-gyp-src/test/simple-proxy.js 8080 /foobar/ https://iojs.org/dist/ &) &&
+  (node /node-ninja-src/test/simple-proxy.js 8080 /foobar/ https://iojs.org/dist/ &) &&
   cd node-buffertools &&
-  /node-gyp-src/bin/node-gyp.js --loglevel=info --dist-url=http://localhost:8080/foobar/ rebuild &&
+  /node-ninja-src/bin/node-ninja.js --loglevel=info --dist-url=http://localhost:8080/foobar/ rebuild &&
   nc -z localhost 8080 && echo -e \"\\n\\n\\033[31mFAILED TO USE LOCAL PROXY\\033[39m\\n\\n\"
 "
 
 run_tests "3.3.0" "
-  (node /node-gyp-src/test/simple-proxy.js 8080 /doobar/ https://iojs.org/dist/ &) &&
+  (node /node-ninja-src/test/simple-proxy.js 8080 /doobar/ https://iojs.org/dist/ &) &&
   cd node-buffertools &&
-  NVM_IOJS_ORG_MIRROR=http://localhost:8080/doobar/ /node-gyp-src/bin/node-gyp.js --loglevel=info rebuild &&
+  NVM_IOJS_ORG_MIRROR=http://localhost:8080/doobar/ /node-ninja-src/bin/node-ninja.js --loglevel=info rebuild &&
   nc -z localhost 8080 && echo -e \"\\n\\n\\033[31mFAILED TO USE LOCAL PROXY\\033[39m\\n\\n\"
 "
 
 run_tests "0.12.7" "
-  (node /node-gyp-src/test/simple-proxy.js 8080 /boombar/ https://nodejs.org/dist/ &) &&
+  (node /node-ninja-src/test/simple-proxy.js 8080 /boombar/ https://nodejs.org/dist/ &) &&
   cd node-buffertools &&
-  NVM_NODEJS_ORG_MIRROR=http://localhost:8080/boombar/ /node-gyp-src/bin/node-gyp.js --loglevel=info rebuild &&
+  NVM_NODEJS_ORG_MIRROR=http://localhost:8080/boombar/ /node-ninja-src/bin/node-ninja.js --loglevel=info rebuild &&
   nc -z localhost 8080 && echo -e \"\\n\\n\\033[31mFAILED TO USE LOCAL PROXY\\033[39m\\n\\n\"
 "
 

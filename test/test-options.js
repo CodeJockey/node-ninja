@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape')
-var gyp = require('../lib/node-gyp')
+var gyp = require('../lib/node-ninja')
 
 test('options in environment', function (t) {
   t.plan(1)

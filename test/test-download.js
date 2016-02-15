@@ -11,7 +11,7 @@ test('download over http', function (t) {
 
   var server = http.createServer(function (req, res) {
     t.strictEqual(req.headers['user-agent'],
-                  'node-gyp v42 (node ' + process.version + ')')
+                  'node-ninja v42 (node ' + process.version + ')')
     res.end('ok')
     server.close()
   })
@@ -51,7 +51,7 @@ test('download over https with custom ca', function (t) {
   var options = { ca: ca, cert: cert, key: key }
   var server = https.createServer(options, function (req, res) {
     t.strictEqual(req.headers['user-agent'],
-                  'node-gyp v42 (node ' + process.version + ')')
+                  'node-ninja v42 (node ' + process.version + ')')
     res.end('ok')
     server.close()
   })
