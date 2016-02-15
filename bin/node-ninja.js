@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 
 /**
+ *  Copyright (c) the Contributors as noted in the AUTHORS file.
+ *  This file is part of node-ninja.
+ *
+ *  This Source Code Form is subject to the terms of the Mozilla Public
+ *  License, v. 2.0. If a copy of the MPL was not distributed with this
+ *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/**
  * Set the title.
  */
 
-process.title = 'node-gyp'
+process.title = 'node-ninja'
 
 /**
  * Module dependencies.
@@ -32,7 +41,7 @@ if (prog.todo.length === 0) {
 
 log.info('it worked if it ends with', 'ok')
 log.verbose('cli', process.argv)
-log.info('using', 'node-gyp@%s', prog.version)
+log.info('using', 'node-ninja@%s', prog.version)
 log.info('using', 'node@%s | %s | %s', process.versions.node, process.platform, process.arch)
 
 
@@ -84,7 +93,7 @@ function run () {
           console.log(version)
         })
       } else {
-        console.log('No node development files installed. Use `node-gyp install` to install a version.')
+        console.log('No node development files installed. Use `node-ninja install` to install a version.')
       }
     } else if (arguments.length >= 2) {
       console.log.apply(console, [].slice.call(arguments, 1))
@@ -118,14 +127,14 @@ function errorMessage () {
             .map(JSON.stringify).join(' '))
   log.error('cwd', process.cwd())
   log.error('node -v', process.version)
-  log.error('node-gyp -v', 'v' + prog.package.version)
+  log.error('node-ninja -v', 'v' + prog.package.version)
 }
 
 function issueMessage () {
   errorMessage()
-  log.error('', [ 'This is a bug in `node-gyp`.'
-                , 'Try to update node-gyp and file an Issue if it does not help:'
-                , '    <https://github.com/nodejs/node-gyp/issues>'
+  log.error('', [ 'This is a bug in `node-ninja`.'
+                , 'Try to update node-ninja and file an Issue if it does not help:'
+                , '    <https://github.com/codejockey/node-ninja/issues>'
                 ].join('\n'))
 }
 
