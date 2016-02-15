@@ -1,18 +1,21 @@
-node-gyp
-=========
+node-ninja
+==========
+
+### Goals
+
+This is a fork of node-gyp, with the goal of removing the dependency on GYP and 
+targetting the Ninja build system instead.
+
 ### Node.js native addon build tool
 
-`node-gyp` is a cross-platform command-line tool written in Node.js for compiling
-native addon modules for Node.js.  It bundles the [gyp](https://code.google.com/p/gyp/)
+`node-ninja` is a cross-platform command-line tool written in Node.js for compiling
+native addon modules for Node.js. It bundles the [gyp](https://code.google.com/p/gyp/)
 project used by the Chromium team and takes away the pain of dealing with the
-various differences in build platforms. It is the replacement to the `node-waf`
-program which is removed for node `v0.8`. If you have a native addon for node that
-still has a `wscript` file, then you should definitely add a `binding.gyp` file
-to support the latest versions of node.
+various differences in build platforms.
 
 Multiple target versions of node are supported (i.e. `0.8`, `0.9`, `0.10`, ..., `1.0`,
 etc.), regardless of what version of node is actually installed on your system
-(`node-gyp` downloads the necessary development files for the target version).
+(`node-ninja` downloads the necessary development files for the target version).
 
 #### Features:
 
@@ -27,7 +30,7 @@ Installation
 You can install with `npm`:
 
 ``` bash
-$ npm install -g node-gyp
+$ npm install -g node-ninja
 ```
 
 You will also need to install:
@@ -48,16 +51,13 @@ You will also need to install:
       * Microsoft Visual Studio C++ 2013 ([Express][msvc2013] version works well)
         * If the install fails, try uninstalling any C++ 2010 x64&x86 Redistributable that you have installed first
         * If you get errors that the 64-bit compilers are not installed you may also need the [compiler update for the Windows SDK 7.1]
-    * Windows 7/8:
-      * Microsoft Visual Studio C++ 2013 for Windows Desktop ([Express][msvc2013] version works well)
-    * Windows 10:
+    * Windows 7/8/10:
         * Install the latest version of npm (3.3.6 at the time of writing)
         * Install Python 2.7 from https://www.python.org/download/releases/2.7/ and make sure its on the System Path
         * Install Visual Studio Community 2015 Edition. (Custom Install, Select Visual C++ during the installation)
         * Set the environment variable GYP_MSVS_VERSION=2015
         * Run the command prompt as Administrator
         * $ npm install (--msvs_version=2015) <-- Shouldn't be needed if you have set GYP_MSVS_VERSION env
-        * If the above steps have not worked or you are unsure please visit http://www.serverpals.com/blog/building-using-node-gyp-with-visual-studio-express-2015-on-windows-10-pro-x64 for a full walkthrough
     * All Windows Versions
       * For 64-bit builds of node and native modules you will _**also**_ need the [Windows 7 64-bit SDK][win7sdk]
       * You may need to run one of the following commands if your build complains about WindowsSDKDir not being set, and you are sure you have already installed the SDK:
@@ -68,18 +68,18 @@ call "C:\Program Files\Microsoft SDKs\Windows\v7.1\bin\Setenv.cmd" /Release /x64
 ```
 
 If you have multiple Python versions installed, you can identify which Python
-version `node-gyp` uses by setting the '--python' variable:
+version `node-ninja` uses by setting the '--python' variable:
 
-``` bash
-$ node-gyp --python /path/to/python2.7
+```
+node-ninja --python /path/to/python2.7
 ```
 
-If `node-gyp` is called by way of `npm` *and* you have multiple versions of
+If `node-ninja` is called by way of `npm` *and* you have multiple versions of
 Python installed, then you can set `npm`'s 'python' config key to the appropriate
 value:
 
-``` bash
-$ npm config set python /path/to/executable/python2.7
+```
+npm config set python /path/to/executable/python2.7
 ```
 
 Note that OS X is just a flavour of Unix and so needs `python`, `make`, and C/C++.
@@ -91,15 +91,15 @@ How to Use
 
 To compile your native addon, first go to its root directory:
 
-``` bash
-$ cd my_node_addon
+```
+cd my_node_addon
 ```
 
 The next step is to generate the appropriate project build files for the current
 platform. Use `configure` for that:
 
-``` bash
-$ node-gyp configure
+```
+node-ninja configure
 ```
 
 __Note__: The `configure` step looks for the `binding.gyp` file in the current
@@ -108,8 +108,8 @@ directory to process. See below for instructions on creating the `binding.gyp` f
 Now you will have either a `Makefile` (on Unix platforms) or a `vcxproj` file
 (on Windows) in the `build/` directory. Next invoke the `build` command:
 
-``` bash
-$ node-gyp build
+```
+node-ninja build
 ```
 
 Now you have your compiled `.node` bindings file! The compiled bindings end up
@@ -123,37 +123,29 @@ __Note:__ To create a _Debug_ build of the bindings file, pass the `--debug` (or
 The "binding.gyp" file
 ----------------------
 
-Previously when node had `node-waf` you had to write a `wscript` file. The
-replacement for that is the `binding.gyp` file, which describes the configuration
-to build your module in a JSON-like format. This file gets placed in the root of
+The `binding.gyp` file describes the configuration to build your module in [a JSON-like format](https://gyp.gsrc.io/docs/LanguageSpecification.md). This file gets placed in the root of
 your package, alongside the `package.json` file.
 
 A barebones `gyp` file appropriate for building a node addon looks like:
 
 ``` python
+# A minimal gyp file
 {
   "targets": [
     {
       "target_name": "binding",
-      "sources": [ "src/binding.cc" ]
-    }
-  ]
+      "sources": [ "src/binding.cc" ],
+    },
+  ],
 }
 ```
 
-Some additional resources for addons and writing `gyp` files:
-
- * ["Going Native" a nodeschool.io tutorial](http://nodeschool.io/#goingnative)
- * ["Hello World" node addon example](https://github.com/nodejs/node/tree/master/test/addons/hello-world)
- * [gyp user documentation](https://gyp.gsrc.io/docs/UserDocumentation.md)
- * [gyp input format reference](https://gyp.gsrc.io/docs/InputFormatReference.md)
- * [*"binding.gyp" files out in the wild* wiki page](https://github.com/nodejs/node-gyp/wiki/%22binding.gyp%22-files-out-in-the-wild)
-
+Note that the file format allows trailing commas, and `#` comments.
 
 Commands
 --------
 
-`node-gyp` responds to the following commands:
+`node-ninja` accepts the following commands:
 
 | **Command**   | **Description**
 |:--------------|:---------------------------------------------------------------
@@ -168,8 +160,9 @@ Commands
 
 License
 -------
+Node-ninja is licensed under the Mozilla Public License version 2.0. See LICENSE.
 
-(The MIT License)
+Part of this code coming from node-gyp are licensed under the MIT license as follows:
 
 Copyright (c) 2012 Nathan Rajlich &lt;nathan@tootallnate.net&gt;
 

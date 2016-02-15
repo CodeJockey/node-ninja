@@ -1,7 +1,7 @@
 {
-  "name": "node-gyp",
+  "name": "node-ninja",
   "description": "Node.js native addon build tool",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "keywords": [
     "native",
     "addon",
@@ -11,16 +11,16 @@
     "bindings",
     "gyp"
   ],
-  "version": "3.2.1",
-  "installVersion": 9,
-  "author": "Nathan Rajlich <nathan@tootallnate.net> (http://tootallnate.net)",
+  "version": "0.2.0",
+  "installVersion": 0,
+  "author": "Pieter Hintjens <pieterh@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/nodejs/node-gyp.git"
+    "url": "git://github.com/codejockey/node-ninja.git"
   },
   "preferGlobal": true,
-  "bin": "./bin/node-gyp.js",
-  "main": "./lib/node-gyp.js",
+  "bin": "./bin/node-ninja.js",
+  "main": "./lib/node-ninja.js",
   "dependencies": {
     "fstream": "^1.0.0",
     "glob": "3 || 4",
