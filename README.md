@@ -41,6 +41,8 @@ You can install with `npm`:
 $ npm install -g node-ninja
 ```
 
+TODO: review this section, it is out of date.
+
 You will also need to install:
 
   * On Unix:
@@ -165,6 +167,17 @@ Commands
 | `list`        | Lists the currently installed node development file versions
 | `remove`      | Removes the node development header files for the given version
 
+`node-gyp` accepts the following command options:
+
+| **Option**         | **Description**
+|:-------------------|:------------------------------------------------
+| `-j n`, `--jobs n` | For `build`: run parallel builds
+| `--silly`, `--loglevel=silly` | Log all progress to console
+| `--verbose`, `--loglevel=verbose` | Log most progress to console
+| `--silent`, `--loglevel=silent` | Don't log anything
+| `--debug`          | Make Debug build (default=Release)
+| `--release`, `--no-debug` | Make Release build
+| `--builddir x` | Build in this directory (default=build)
 
 License
 -------
