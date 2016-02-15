@@ -1,10 +1,18 @@
 node-ninja
 ==========
 
-### Goals
+## Goals
 
 This is a fork of node-gyp, with the goal of removing the dependency on GYP and 
 targetting the Ninja build system instead.
+
+## How to Contribute
+
+* Be a node-ninja user.
+* Read [CONTRIBUTING.md](contributing.md) for details.
+* Fork https://github.com/codejockey/node-ninja to your own account.
+* Solve small problems with minimal, neat solutions.
+* Send us your pull requests, and we will merge them.
 
 ### Node.js native addon build tool
 
