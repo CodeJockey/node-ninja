@@ -19,7 +19,7 @@ The current version is different from node-gyp in these significant ways:
 ## How to Contribute
 
 * Be a node-ninja user.
-* Read [CONTRIBUTING.md](contributing.md) for details.
+* Read [/CodeJockey/node-ninja/blob/master/CONTRIBUTING.md](contributing.md) for details.
 * Fork https://github.com/codejockey/node-ninja to your own account.
 * Solve small problems with minimal, neat solutions.
 * Send us your pull requests, and we will merge them.
