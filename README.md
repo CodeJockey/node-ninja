@@ -3,8 +3,18 @@ node-ninja
 
 ## Goals
 
-This is a fork of node-gyp, with the goal of removing the dependency on GYP and 
-targetting the Ninja build system instead.
+This is a fork of node-gyp, with the long term goal of removing the dependency on
+GYP and targeting the Ninja build system instead.
+
+The current version is different from node-gyp in these significant ways:
+
+* It has better support for native stacks with multiple gyp files.
+
+* It supports incremental builds when pre-building against multiple Node.js ABI versions, when using a package like `prebuild`.
+
+* It is licensed under Mozilla Public License version 2.0.
+
+* It uses the [C4](http://rfc.zeromq.org/spec:22) contribution process, meaning your patches will be accepted rapidly, if they conform to some basic rules.
 
 ## How to Contribute
 
