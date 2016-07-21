@@ -11,7 +11,7 @@
     "bindings",
     "gyp"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "installVersion": 0,
   "author": "Pieter Hintjens <pieterh@gmail.com>",
   "repository": {
