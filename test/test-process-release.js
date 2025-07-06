@@ -57,7 +57,7 @@ test('test process release - process.version = 0.12.22', function (t) {
     version: '0.12.22',
     name: 'node',
     baseUrl: 'https://nodejs.org/dist/v0.12.22/',
-    tarballUrl: 'https://nodejs.org/dist/v0.12.22/node-v0.12.22.tar.gz',
+    tarballUrl: 'https://nodejs.org/dist/v0.12.22/node-v0.12.22-headers.tar.gz',
     shasumsUrl: 'https://nodejs.org/dist/v0.12.22/SHASUMS256.txt',
     versionDir: '0.12.22',
     libUrl32: 'https://nodejs.org/dist/v0.12.22/node.lib',
